@@ -30,19 +30,19 @@ namespace Labyrinth.Infrastructure.GameFlowSystem
 			_attemptTracker = attemptTracker;
 		}
 
-		public void LoadGameScene() => LoadGameSceneInternalAsync(useSaveOnLoad: false);
-		public void RestartLevel() => LoadGameSceneInternalAsync(useSaveOnLoad: false);
-		public void LoadSaveForCurrentLevel() => LoadGameSceneInternalAsync(useSaveOnLoad: true);
+		public void LoadGameScene() => LoadGameSceneInternalAsync(useSaveOnLoad: false, incrementAttempts: false);
+		public void RestartLevel() => LoadGameSceneInternalAsync(useSaveOnLoad: false, incrementAttempts: true);
+		public void LoadSaveForCurrentLevel() => LoadGameSceneInternalAsync(useSaveOnLoad: true, incrementAttempts: false);
 
-		private async void LoadGameSceneInternalAsync(bool useSaveOnLoad)
+		private async void LoadGameSceneInternalAsync(bool useSaveOnLoad, bool incrementAttempts)
 		{
 			const int gameSceneIndex = 1;
 
 			await _sceneLoader.LoadSceneAsync(gameSceneIndex, extraBindings: container => container.BindInstance(useSaveOnLoad).WhenInjectedInto<SaveManager>());
 			await UniTask.DelayFrame(1);
 			
-			if (!useSaveOnLoad)
-				_attemptTracker.IncrementAttempts();
+			if (incrementAttempts)
+				_attemptTracker.Attempts.Value++;
 		}
 	}
 }

@@ -25,7 +25,7 @@ namespace Labyrinth.Game
 			_gameStateManager = gameStateManager;
 			_saveManager = saveManager;
 			_remainingSeconds = new ReactiveProperty<int>(timeLimit);
-			
+
 			saveManager.RegisterSaveObserver(this);
 			saveManager.RegisterLoadObserver(this);
 		}
@@ -46,7 +46,11 @@ namespace Labyrinth.Game
 			_disposable = Observable.Interval(TimeSpan.FromSeconds(1), Scheduler.MainThreadEndOfFrame)
 			                        .TakeWhile(_ => _remainingSeconds.Value > 0)
 			                        .TakeUntil(levelCompletedStream)
-			                        .Subscribe(_ => _remainingSeconds.Value--, () => _gameStateManager.CurrentState = GameState.LevelFailed);
+			                        .Subscribe(_ => _remainingSeconds.Value--, () =>
+			                        {
+				                        if (_gameStateManager.CurrentState == GameState.Gameplay)
+					                        _gameStateManager.CurrentState = GameState.LevelFailed;
+			                        });
 		}
 
 		public void Dispose()

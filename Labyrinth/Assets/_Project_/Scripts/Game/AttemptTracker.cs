@@ -5,26 +5,21 @@ namespace Labyrinth.Game
 {
 	public interface IAttemptTracker
 	{
-		IReadOnlyReactiveProperty<int> Attempts { get; }
-		void ClearAttempts();
-		void IncrementAttempts();
+		ReactiveProperty<int> Attempts { get; }
+		public void ClearAttempts();
 	}
 
 	public class AttemptTracker : IAttemptTracker
 	{
+		private const int INITIAL_VALUE = 1;
+		
 		private readonly ISaveManager _saveManager;
-		private readonly ReactiveProperty<int> _attempts = new(1);
 
-		public IReadOnlyReactiveProperty<int> Attempts => _attempts;
-
-		public void IncrementAttempts()
-		{
-			_attempts.Value++;
-		}
+		public ReactiveProperty<int> Attempts { get; } = new(INITIAL_VALUE);
 
 		public void ClearAttempts()
 		{
-			_attempts.Value = 0;
+			Attempts.Value = INITIAL_VALUE;
 		}
 	}
 }
