@@ -1,5 +1,6 @@
 ﻿using System;
 using Labyrinth.Infrastructure.GameStateSystem;
+using Labyrinth.Infrastructure.SaveSystem;
 using UniRx;
 using Zenject;
 
@@ -10,7 +11,7 @@ namespace Labyrinth.Game
 		IReadOnlyReactiveProperty<int> RemainingSeconds { get; }
 	}
 
-	public class LevelTimer : IInitializable, IDisposable, ILevelTimer
+	public class LevelTimer : IInitializable, IDisposable, ILevelTimer, ISaveObserver, ILoadObserver
 	{
 		private readonly IGameStateManager _gameStateManager;
 		private readonly ReactiveProperty<int> _remainingSeconds;
@@ -27,6 +28,11 @@ namespace Labyrinth.Game
 
 		public void Initialize()
 		{
+			SetupTimerStream();
+		}
+
+		private void SetupTimerStream()
+		{
 			var levelCompletedStream = Observable.FromEvent<GameState>(h => _gameStateManager.StateChanged += h, h => _gameStateManager.StateChanged -= h)
 			                                     .Where(x => x is GameState.LevelComplete)
 			                                     .First();
@@ -40,6 +46,21 @@ namespace Labyrinth.Game
 		public void Dispose()
 		{
 			_disposable?.Dispose();
+		}
+
+		public void OnSave(LevelSaveData saveData)
+		{
+			saveData.RemainingTime = _remainingSeconds.Value;
+		}
+
+		public void OnLoad(LevelSaveData saveData)
+		{
+			_remainingSeconds.Value = saveData.RemainingTime;
+			if (_disposable != null)
+			{
+				_disposable.Dispose();
+				SetupTimerStream();
+			}
 		}
 	}
 }

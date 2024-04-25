@@ -4195,6 +4195,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _inputCanvasPrefab: {fileID: 925280602005526305, guid: d55f95a0740127044a54870e925ee990,
     type: 3}
+  _levelTimeLimit: 60
 --- !u!1 &1450720395
 GameObject:
   m_ObjectHideFlags: 0

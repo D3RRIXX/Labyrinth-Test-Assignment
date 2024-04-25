@@ -1406,7 +1406,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1234447723029466763}
+      objectReference: {fileID: 2395542162707056599}
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -1420,7 +1420,7 @@ PrefabInstance:
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Labyrinth.UI.HudScreen, Labyrinth
+      value: Labyrinth.UI.PauseMenuView, Labyrinth
       objectReference: {fileID: 0}
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}
@@ -1746,7 +1746,7 @@ PrefabInstance:
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Target
       value: 
-      objectReference: {fileID: 1234447723029466763}
+      objectReference: {fileID: 2395542162707056599}
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_CallState
@@ -1760,7 +1760,7 @@ PrefabInstance:
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_TargetAssemblyTypeName
-      value: Labyrinth.UI.HudScreen, Labyrinth
+      value: Labyrinth.UI.PauseMenuView, Labyrinth
       objectReference: {fileID: 0}
     - target: {fileID: 8684844471092873693, guid: 84e6fee31880a6a4ead15389a91fbf71,
         type: 3}

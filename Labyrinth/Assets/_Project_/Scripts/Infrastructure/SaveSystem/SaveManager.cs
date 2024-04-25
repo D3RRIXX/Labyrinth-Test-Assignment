@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Labyrinth.Infrastructure.GameFlowSystem;
+using Labyrinth.Infrastructure.GameStateSystem;
 using UnityEngine;
 using Zenject;
 
@@ -16,12 +18,13 @@ namespace Labyrinth.Infrastructure.SaveSystem
 		void UnregisterLoadObserver(ILoadObserver observer);
 	}
 
-	public class SaveManager : IInitializable, IDisposable, ISaveManager
+	public class SaveManager : IInitializable, ISaveManager
 	{
 		public static readonly string SAVE_PATH = $"{Application.persistentDataPath}/save.dat";
+
 		private readonly List<ISaveObserver> _saveObservers = new();
 		private readonly List<ILoadObserver> _loadObservers = new();
-		
+
 		private readonly bool _loadOnInitialize;
 
 		public LevelSaveData SaveData { get; private set; }
@@ -40,16 +43,11 @@ namespace Labyrinth.Infrastructure.SaveSystem
 			SaveData = saveData;
 			if (!_loadOnInitialize)
 				return;
-			
+
 			foreach (ILoadObserver observer in _loadObservers)
 			{
 				observer.OnLoad(SaveData);
 			}
-		}
-
-		public void Dispose()
-		{
-			PerformSave();
 		}
 
 		public void PerformSave()

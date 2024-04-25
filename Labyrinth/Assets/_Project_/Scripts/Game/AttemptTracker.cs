@@ -1,53 +1,30 @@
-﻿using System;
-using Labyrinth.Infrastructure.GameFlowSystem;
-using Labyrinth.Infrastructure.SaveSystem;
+﻿using Labyrinth.Infrastructure.SaveSystem;
+using UniRx;
 
 namespace Labyrinth.Game
 {
 	public interface IAttemptTracker
 	{
-		int Attempts { get; }
+		IReadOnlyReactiveProperty<int> Attempts { get; }
+		void ClearAttempts();
+		void IncrementAttempts();
 	}
 
-	public class AttemptTracker : IDisposable, ISaveObserver, ILoadObserver, IAttemptTracker
+	public class AttemptTracker : IAttemptTracker
 	{
-		private readonly IGameFlowService _gameFlowService;
 		private readonly ISaveManager _saveManager;
-		
-		public int Attempts { get; private set; }
-		
-		public AttemptTracker(ISaveManager saveManager, IGameFlowService gameFlowService)
+		private readonly ReactiveProperty<int> _attempts = new();
+
+		public IReadOnlyReactiveProperty<int> Attempts => _attempts;
+
+		public void IncrementAttempts()
 		{
-			_saveManager = saveManager;
-			_gameFlowService = gameFlowService;
-			_gameFlowService.LevelStarted += OnLevelStarted;
-			
-			saveManager.RegisterSaveObserver(this);
-			saveManager.RegisterLoadObserver(this);
+			_attempts.Value++;
 		}
 
-		public void Dispose()
+		public void ClearAttempts()
 		{
-			_saveManager.UnregisterLoadObserver(this);
-			_saveManager.UnregisterSaveObserver(this);
-			
-			_gameFlowService.LevelStarted -= OnLevelStarted;
-		}
-
-		private void OnLevelStarted(bool fullRestart)
-		{
-			if (fullRestart)
-				Attempts++;
-		}
-
-		public void OnSave(LevelSaveData saveData)
-		{
-			saveData.Attempts = Attempts;
-		}
-
-		public void OnLoad(LevelSaveData saveData)
-		{
-			Attempts = saveData.Attempts;
+			_attempts.Value = 0;
 		}
 	}
 }

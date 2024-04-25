@@ -26,10 +26,10 @@ namespace Labyrinth.Game.Characters.AI
 		{
 			Handles.color = Color.red;
 			float halfFOV = _viewAngle / 2f;
-			
+
 			Vector3 startPoint = Quaternion.Euler(0, -halfFOV, 0) * transform.forward * _viewDistance + transform.position;
 			Vector3 endPoint = Quaternion.Euler(0, halfFOV, 0) * transform.forward * _viewDistance + transform.position;
-			
+
 			Handles.DrawWireArc(transform.position, Vector3.up, Quaternion.Euler(0, -halfFOV, 0) * transform.forward, _viewAngle, _viewDistance);
 			Handles.DrawLine(transform.position, startPoint);
 			Handles.DrawLine(transform.position, endPoint);
@@ -58,8 +58,8 @@ namespace Labyrinth.Game.Characters.AI
 
 				yield return null;
 			}
-			
 		}
+
 		private bool TryFindPlayer(out PlayerMovement player)
 		{
 			int count = Physics.OverlapSphereNonAlloc(transform.position, _viewDistance, OVERLAP_RESULTS, _targetMask);
@@ -72,8 +72,7 @@ namespace Labyrinth.Game.Characters.AI
 				if (!ResultIsInFov(direction) || HasObstacleAhead(direction) || !target.TryGetComponent(out player))
 					continue;
 
-				if (!player.IsHiding)
-					return true;
+				return true;
 			}
 
 			player = null;

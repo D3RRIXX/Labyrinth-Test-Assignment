@@ -10,10 +10,6 @@ namespace Labyrinth.Game.Characters.Player
 		private Rigidbody _rb;
 		private Vector3 _inputDirection;
 
-		public Vector3 Velocity { get; private set; }
-
-		public bool IsHiding => Velocity == Vector3.zero;
-
 		private void Awake()
 		{
 			_rb = GetComponent<Rigidbody>();
@@ -31,8 +27,7 @@ namespace Labyrinth.Game.Characters.Player
 
 		private void MoveInDirection()
 		{
-			Velocity = _inputDirection * _moveSpeed;
-			_rb.MovePosition(_rb.position + Velocity * Time.deltaTime);
+			_rb.velocity = _inputDirection * _moveSpeed;
 
 			RotateTowardsMovement(_inputDirection);
 			_inputDirection = Vector3.zero;

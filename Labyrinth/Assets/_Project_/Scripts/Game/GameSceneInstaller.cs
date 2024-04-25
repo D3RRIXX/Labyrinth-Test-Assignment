@@ -14,11 +14,11 @@ namespace Labyrinth.Game
 		public override void InstallBindings()
 		{
 			Container.BindInterfacesTo<SaveManager>().AsSingle();
-			Container.BindInterfacesTo<AttemptTracker>().AsSingle();
 			Container.BindInterfacesTo<GameStateManager>().AsSingle();
 
 			Container.Bind<Joystick>().FromMethod(InstantiateInputCanvas).AsSingle();
 
+			Container.BindInitializableExecutionOrder<LevelTimer>(10);
 			Container.BindInterfacesTo<LevelTimer>()
 			         .AsSingle()
 			         .WithArguments(_levelTimeLimit);
