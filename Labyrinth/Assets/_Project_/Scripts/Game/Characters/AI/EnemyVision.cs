@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using Labyrinth.Game.Characters.Player;
 using UnityEngine;
 
@@ -12,12 +13,11 @@ namespace Labyrinth.Game.Characters.AI
 	public class EnemyVision : MonoBehaviour
 	{
 		[SerializeField] private float _viewDistance;
+		[SerializeField] private float _eyeHeight = 1.7f;
 		[SerializeField, Range(0f, 360f)] private float _viewAngle;
 		[Header("Layer Settings")]
 		[SerializeField] private LayerMask _targetMask;
 		[SerializeField] private LayerMask _obstacleMask;
-
-		private EnemyAI _ai;
 
 		private static readonly Collider[] OVERLAP_RESULTS = new Collider[50];
 
@@ -27,32 +27,41 @@ namespace Labyrinth.Game.Characters.AI
 			Handles.color = Color.red;
 			float halfFOV = _viewAngle / 2f;
 
-			Vector3 startPoint = Quaternion.Euler(0, -halfFOV, 0) * transform.forward * _viewDistance + transform.position;
-			Vector3 endPoint = Quaternion.Euler(0, halfFOV, 0) * transform.forward * _viewDistance + transform.position;
+			Vector3 position = EyePosition;
+			Vector3 startPoint = Quaternion.Euler(0, -halfFOV, 0) * transform.forward * _viewDistance + position;
+			Vector3 endPoint = Quaternion.Euler(0, halfFOV, 0) * transform.forward * _viewDistance + position;
 
-			Handles.DrawWireArc(transform.position, Vector3.up, Quaternion.Euler(0, -halfFOV, 0) * transform.forward, _viewAngle, _viewDistance);
-			Handles.DrawLine(transform.position, startPoint);
-			Handles.DrawLine(transform.position, endPoint);
+			Handles.DrawWireArc(position, Vector3.up, Quaternion.Euler(0, -halfFOV, 0) * transform.forward, _viewAngle, _viewDistance);
+			Handles.DrawLine(position, startPoint);
+			Handles.DrawLine(position, endPoint);
 		}
 #endif
 
-		private void Awake()
+		private Vector3 EyePosition => transform.position + Vector3.up * _eyeHeight;
+
+		public void StartLookingForPlayer(Action<PlayerMovement> spottedPlayerCallback)
 		{
-			_ai = GetComponent<EnemyAI>();
+			StartCoroutine(LookForPlayer(spottedPlayerCallback));
 		}
 
-		private void Start()
+		public bool CanSeeTarget(Transform target)
 		{
-			StartCoroutine(LookForPlayer());
+			Vector3 direction = target.position - EyePosition;
+			direction.y = 0f;
+
+			return ResultIsInFov() && !HasObstacleAhead(out RaycastHit _);
+
+			bool ResultIsInFov() => Vector3.Angle(transform.forward, direction) <= _viewAngle / 2f;
+			bool HasObstacleAhead(out RaycastHit hit) => Physics.Raycast(EyePosition, direction, out hit, direction.magnitude, _obstacleMask);
 		}
 
-		private IEnumerator LookForPlayer()
+		private IEnumerator LookForPlayer(Action<PlayerMovement> spottedPlayerCallback)
 		{
 			while (true)
 			{
 				if (TryFindPlayer(out PlayerMovement player))
 				{
-					_ai.OnSpottedPlayer(player);
+					spottedPlayerCallback(player);
 					yield break;
 				}
 
@@ -62,14 +71,12 @@ namespace Labyrinth.Game.Characters.AI
 
 		private bool TryFindPlayer(out PlayerMovement player)
 		{
-			int count = Physics.OverlapSphereNonAlloc(transform.position, _viewDistance, OVERLAP_RESULTS, _targetMask);
+			int count = Physics.OverlapSphereNonAlloc(EyePosition, _viewDistance, OVERLAP_RESULTS, _targetMask);
 
 			for (int i = 0; i < count; i++)
 			{
-				Collider target = OVERLAP_RESULTS[i];
-
-				Vector3 direction = target.transform.position - transform.position;
-				if (!ResultIsInFov(direction) || HasObstacleAhead(direction) || !target.TryGetComponent(out player))
+				Transform target = OVERLAP_RESULTS[i].transform;
+				if (!CanSeeTarget(target) || !target.TryGetComponent(out player))
 					continue;
 
 				return true;
@@ -77,9 +84,6 @@ namespace Labyrinth.Game.Characters.AI
 
 			player = null;
 			return false;
-
-			bool ResultIsInFov(Vector3 direction) => Vector3.Angle(transform.forward, direction) <= _viewAngle / 2f;
-			bool HasObstacleAhead(Vector3 direction) => Physics.Raycast(transform.position, direction, _viewDistance, _obstacleMask);
 		}
 	}
 }

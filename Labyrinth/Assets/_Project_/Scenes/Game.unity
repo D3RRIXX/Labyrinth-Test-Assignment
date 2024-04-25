@@ -990,7 +990,7 @@ MonoBehaviour:
   m_ShowCameraFrustum: 1
   m_IgnoreTimeScale: 0
   m_WorldUpOverride: {fileID: 0}
-  m_UpdateMethod: 2
+  m_UpdateMethod: 0
   m_BlendUpdateMethod: 1
   m_DefaultBlend:
     m_Style: 1
@@ -1471,6 +1471,11 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy
       objectReference: {fileID: 0}
+    - target: {fileID: 1765030493431837687, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7961897461251081381, guid: 9363c7090124ac4459a7b75e66ddc50a,
         type: 3}
       propertyPath: m_LocalPosition.x
@@ -1580,6 +1585,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy_3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765030493431837687, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6127887410037835401, guid: 9363c7090124ac4459a7b75e66ddc50a,
         type: 3}
@@ -2938,7 +2948,7 @@ GameObject:
   - component: {fileID: 1018823414}
   - component: {fileID: 1018823413}
   - component: {fileID: 1018823412}
-  m_Layer: 3
+  m_Layer: 0
   m_Name: Ground
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -3442,6 +3452,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy_2
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765030493431837687, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6127887410037835401, guid: 9363c7090124ac4459a7b75e66ddc50a,
         type: 3}
@@ -4030,6 +4045,16 @@ PrefabInstance:
       propertyPath: m_Name
       value: Enemy_1
       objectReference: {fileID: 0}
+    - target: {fileID: 1765030493431837687, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 3788881457469490953, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: _eyeHeight
+      value: 1.6
+      objectReference: {fileID: 0}
     - target: {fileID: 6127887410037835401, guid: 9363c7090124ac4459a7b75e66ddc50a,
         type: 3}
       propertyPath: _patrolPoints.Array.size
@@ -4611,6 +4636,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: Enemy_4
+      objectReference: {fileID: 0}
+    - target: {fileID: 1765030493431837687, guid: 9363c7090124ac4459a7b75e66ddc50a,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6127887410037835401, guid: 9363c7090124ac4459a7b75e66ddc50a,
         type: 3}

@@ -156,6 +156,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _patrolPoints: []
   _changePointCooldown: 1
+  _catchPlayerDistance: 1.5
 --- !u!114 &6900953413984936854
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -183,13 +184,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _viewDistance: 7
+  _eyeHeight: 1.6
   _viewAngle: 90
   _targetMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 64
   _obstacleMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 8
 --- !u!1 &2999975004780812213
 GameObject:
   m_ObjectHideFlags: 0
