@@ -24,7 +24,7 @@ namespace Labyrinth.UI
 		{
 			_gameFlowService = gameFlowService;
 			_saveManager = saveManager;
-			_hudScreen = GetComponentInParent<HudScreen>();
+			_hudScreen = GetComponentInParent<HudScreen>(true);
 		}
 
 		private void OnEnable()
