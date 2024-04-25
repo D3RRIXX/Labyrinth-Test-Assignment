@@ -3,7 +3,8 @@
     "rootNamespace": "Labyrinth",
     "references": [
         "JoystickPack",
-        "Zenject"
+        "Zenject",
+        "Unity.TextMeshPro"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],
