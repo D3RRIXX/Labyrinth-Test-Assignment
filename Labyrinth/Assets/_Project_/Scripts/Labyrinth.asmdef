@@ -4,7 +4,10 @@
     "references": [
         "JoystickPack",
         "Zenject",
-        "Unity.TextMeshPro"
+        "Unity.TextMeshPro",
+        "UniTask",
+        "UniTask.Linq",
+        "UniRx"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

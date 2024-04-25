@@ -1,9 +1,7 @@
-﻿using System.Collections;
-using Labyrinth.Game;
-using Labyrinth.Infrastructure.SaveSystem;
+﻿using Labyrinth.Game;
 using TMPro;
+using UniRx;
 using UnityEngine;
-using UnityEngine.UI;
 using Zenject;
 
 namespace Labyrinth.UI
@@ -11,22 +9,20 @@ namespace Labyrinth.UI
 	public class HudScreen : MonoBehaviour
 	{
 		[SerializeField] private TMP_Text _attemptsLabel;
+		[SerializeField] private TMP_Text _timerLabel;
 		[Header("Pause Menu")]
 		[SerializeField] private GameObject _pauseMenu;
 
-		private ISaveManager _saveManager;
-		private IAttemptTracker _attemptTracker;
-
 		[Inject]
-		private void Construct(IAttemptTracker attemptTracker, ISaveManager saveManager)
+		private void Construct(IAttemptTracker attemptTracker,ILevelTimer levelTimer)
 		{
-			_attemptTracker = attemptTracker;
-			_saveManager = saveManager;
-		}
+			attemptTracker.Attempts
+			              .Subscribe(x => _attemptsLabel.text = $"Attempts: {x}")
+			              .AddTo(this);
 
-		private void OnEnable()
-		{
-			_attemptsLabel.text = $"Attempts: {_attemptTracker.Attempts}";
+			levelTimer.RemainingSeconds
+			          .Subscribe(x => _timerLabel.text = $"Time Left: {x}")
+			          .AddTo(this);
 		}
 
 		public void PauseGame()
