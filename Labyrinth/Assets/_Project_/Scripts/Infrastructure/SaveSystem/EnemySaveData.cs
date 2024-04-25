@@ -7,7 +7,7 @@ namespace Labyrinth.Infrastructure.SaveSystem
 	public class EnemySaveData
 	{
 		public string Id;
-		public Vector3 WorldPos;
+		public TransformSaveData Transform;
 		public int PatrolPointIdx;
 	}
 }

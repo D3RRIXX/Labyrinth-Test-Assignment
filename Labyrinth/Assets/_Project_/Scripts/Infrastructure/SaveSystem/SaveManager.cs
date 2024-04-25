@@ -12,19 +12,29 @@ namespace Labyrinth.Infrastructure.SaveSystem
 		void PerformSave();
 		void RegisterSaveObserver(ISaveObserver observer);
 		void RegisterLoadObserver(ILoadObserver observer);
+		void UnregisterSaveObserver(ISaveObserver observer);
+		void UnregisterLoadObserver(ILoadObserver observer);
 	}
 
-	public class SaveManager : IInitializable, ISaveManager
+	public class SaveManager : IInitializable, IDisposable, ISaveManager
 	{
-		private static readonly string SAVE_PATH = $"{Application.persistentDataPath}/save.dat";
+		public static readonly string SAVE_PATH = $"{Application.persistentDataPath}/save.dat";
 		private readonly List<ISaveObserver> _saveObservers = new();
 		private readonly List<ILoadObserver> _loadObservers = new();
+		
+		private readonly bool _loadOnInitialize;
 
 		public LevelSaveData SaveData { get; private set; }
 
+		public SaveManager([InjectOptional] bool loadOnInitialize)
+		{
+			_loadOnInitialize = loadOnInitialize;
+		}
+
 		public void Initialize()
 		{
-			if (!Load(out LevelSaveData saveData))
+			Debug.Log("SaveManager initialize");
+			if (!_loadOnInitialize || !TryLoad(out LevelSaveData saveData))
 				return;
 
 			SaveData = saveData;
@@ -32,6 +42,11 @@ namespace Labyrinth.Infrastructure.SaveSystem
 			{
 				observer.OnLoad(SaveData);
 			}
+		}
+
+		public void Dispose()
+		{
+			PerformSave();
 		}
 
 		public void PerformSave()
@@ -42,20 +57,15 @@ namespace Labyrinth.Infrastructure.SaveSystem
 				observer.OnSave(saveData);
 			}
 
-			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(saveData));
+			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(saveData, true));
 		}
 
-		public void RegisterSaveObserver(ISaveObserver observer)
-		{
-			_saveObservers.Add(observer);
-		}
+		public void RegisterSaveObserver(ISaveObserver observer) => _saveObservers.Add(observer);
+		public void RegisterLoadObserver(ILoadObserver observer) => _loadObservers.Add(observer);
+		public void UnregisterSaveObserver(ISaveObserver observer) => _saveObservers.Remove(observer);
+		public void UnregisterLoadObserver(ILoadObserver observer) => _loadObservers.Remove(observer);
 
-		public void RegisterLoadObserver(ILoadObserver observer)
-		{
-			_loadObservers.Add(observer);
-		}
-
-		private bool Load(out LevelSaveData saveData)
+		private bool TryLoad(out LevelSaveData saveData)
 		{
 			if (!File.Exists(SAVE_PATH))
 			{
