@@ -7,9 +7,10 @@ namespace Labyrinth.Infrastructure.SaveSystem
 	[Serializable]
 	public class LevelSaveData
 	{
+		public int RemainingTime;
+		public int Attempts;
 		public List<EnemySaveData> EnemyPositions = new();
 		public TransformSaveData PlayerTransform;
-		public int RemainingTime;
 	}
 
 	[Serializable]

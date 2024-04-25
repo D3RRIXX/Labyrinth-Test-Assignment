@@ -19,6 +19,7 @@ namespace Labyrinth.Game
 			Container.BindInterfacesTo<GameStateManager>().AsSingle();
 
 			Container.Bind<Joystick>().FromMethod(InstantiateInputCanvas).AsSingle();
+			Container.BindInterfacesTo<AttemptTrackerSaveHandler>().AsSingle();
 
 			Container.BindInitializableExecutionOrder<LevelTimer>(10);
 			Container.BindInterfacesTo<LevelTimer>()
