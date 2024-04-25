@@ -2,6 +2,7 @@
 using Labyrinth.Infrastructure.GameStateSystem;
 using Labyrinth.Infrastructure.SaveSystem;
 using UniRx;
+using UnityEngine;
 using Zenject;
 
 namespace Labyrinth.Game
@@ -14,14 +15,21 @@ namespace Labyrinth.Game
 	public class LevelTimer : IInitializable, IDisposable, ILevelTimer, ISaveObserver, ILoadObserver
 	{
 		private readonly IGameStateManager _gameStateManager;
+		private readonly ISaveManager _saveManager;
 		private readonly ReactiveProperty<int> _remainingSeconds;
 
 		private IDisposable _disposable;
 
-		public LevelTimer(int timeLimit, IGameStateManager gameStateManager)
+		public LevelTimer(int timeLimit, IGameStateManager gameStateManager, ISaveManager saveManager)
 		{
 			_gameStateManager = gameStateManager;
+			_saveManager = saveManager;
 			_remainingSeconds = new ReactiveProperty<int>(timeLimit);
+			
+			saveManager.RegisterSaveObserver(this);
+			saveManager.RegisterLoadObserver(this);
+
+			_remainingSeconds.Subscribe(x => Debug.LogWarning(x));
 		}
 
 		public IReadOnlyReactiveProperty<int> RemainingSeconds => _remainingSeconds;
@@ -34,7 +42,7 @@ namespace Labyrinth.Game
 		private void SetupTimerStream()
 		{
 			var levelCompletedStream = Observable.FromEvent<GameState>(h => _gameStateManager.StateChanged += h, h => _gameStateManager.StateChanged -= h)
-			                                     .Where(x => x is GameState.LevelComplete)
+			                                     .Where(x => x is GameState.LevelComplete or GameState.LevelFailed)
 			                                     .First();
 
 			_disposable = Observable.Interval(TimeSpan.FromSeconds(1), Scheduler.MainThread)
@@ -45,6 +53,8 @@ namespace Labyrinth.Game
 
 		public void Dispose()
 		{
+			_saveManager.UnregisterLoadObserver(this);
+			_saveManager.UnregisterSaveObserver(this);
 			_disposable?.Dispose();
 		}
 

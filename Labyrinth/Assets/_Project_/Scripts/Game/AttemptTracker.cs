@@ -13,7 +13,7 @@ namespace Labyrinth.Game
 	public class AttemptTracker : IAttemptTracker
 	{
 		private readonly ISaveManager _saveManager;
-		private readonly ReactiveProperty<int> _attempts = new();
+		private readonly ReactiveProperty<int> _attempts = new(1);
 
 		public IReadOnlyReactiveProperty<int> Attempts => _attempts;
 

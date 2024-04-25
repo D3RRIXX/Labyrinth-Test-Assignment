@@ -65,10 +65,13 @@ namespace Labyrinth.Game.Characters.AI
 				bool playerIsInDistance = Vector3.Distance(transform.position, player.position) < _catchPlayerDistance;
 				if (playerIsInDistance)
 				{
-					_agent.ResetPath();
-					_agent.velocity = Vector3.zero;
-					
 					_gameStateManager.CurrentState = GameState.LevelFailed;
+					
+					StopCoroutine(moveRoutine);
+
+					_agent.ResetPath();
+					_agent.enabled = false;
+					
 					yield break;
 				}
 

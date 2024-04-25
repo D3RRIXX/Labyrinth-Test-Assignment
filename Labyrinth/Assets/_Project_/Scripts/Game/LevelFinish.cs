@@ -4,21 +4,15 @@ using Zenject;
 
 namespace Labyrinth
 {
+	[RequireComponent(typeof(BoxCollider))]
 	public class LevelFinish : MonoBehaviour
 	{
 		private IGameStateManager _gameStateManager;
-		public static LevelFinish Instance { get; private set; }
 
 		[Inject]
 		private void Construct(IGameStateManager gameStateManager)
 		{
 			_gameStateManager = gameStateManager;
-		}
-		
-		private void Awake()
-		{
-			Instance = this;
-			Debug.Log(Application.persistentDataPath);
 		}
 
 		private void OnTriggerEnter(Collider other)

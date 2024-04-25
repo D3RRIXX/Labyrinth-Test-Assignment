@@ -12,19 +12,15 @@ namespace Labyrinth.Game.Characters.Player
 		private IGameStateManager _gameStateManager;
 
 		[Inject]
-		private void Construct(IGameStateManager gameStateManager)
+		private void Construct(IGameStateManager gameStateManager, LevelFinish levelFinish)
 		{
 			_gameStateManager = gameStateManager;
+			_levelFinish = levelFinish;
 		}
 		
 		private void Awake()
 		{
 			_gameStateManager.StateChanged += OnGameStateChanged;
-		}
-
-		private void Start()
-		{
-			_levelFinish = LevelFinish.Instance;
 		}
 
 		private void OnDestroy()

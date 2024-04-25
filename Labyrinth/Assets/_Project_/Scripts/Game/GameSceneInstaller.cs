@@ -9,10 +9,12 @@ namespace Labyrinth.Game
 	public class GameSceneInstaller : MonoInstaller
 	{
 		[SerializeField] private Canvas _inputCanvasPrefab;
+		[SerializeField] private LevelFinish _levelFinish;
 		[SerializeField] private int _levelTimeLimit = 10;
 
 		public override void InstallBindings()
 		{
+			Container.BindInstance(_levelFinish);
 			Container.BindInterfacesTo<SaveManager>().AsSingle();
 			Container.BindInterfacesTo<GameStateManager>().AsSingle();
 
