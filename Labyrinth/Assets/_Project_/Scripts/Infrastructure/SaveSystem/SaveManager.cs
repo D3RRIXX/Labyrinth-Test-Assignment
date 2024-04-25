@@ -34,10 +34,13 @@ namespace Labyrinth.Infrastructure.SaveSystem
 		public void Initialize()
 		{
 			Debug.Log("SaveManager initialize");
-			if (!_loadOnInitialize || !TryLoad(out LevelSaveData saveData))
+			if (!TryLoad(out LevelSaveData saveData))
 				return;
 
 			SaveData = saveData;
+			if (!_loadOnInitialize)
+				return;
+			
 			foreach (ILoadObserver observer in _loadObservers)
 			{
 				observer.OnLoad(SaveData);
@@ -51,13 +54,13 @@ namespace Labyrinth.Infrastructure.SaveSystem
 
 		public void PerformSave()
 		{
-			var saveData = new LevelSaveData();
+			SaveData = new LevelSaveData();
 			foreach (ISaveObserver observer in _saveObservers)
 			{
-				observer.OnSave(saveData);
+				observer.OnSave(SaveData);
 			}
 
-			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(saveData, true));
+			File.WriteAllText(SAVE_PATH, JsonUtility.ToJson(SaveData, true));
 		}
 
 		public void RegisterSaveObserver(ISaveObserver observer) => _saveObservers.Add(observer);

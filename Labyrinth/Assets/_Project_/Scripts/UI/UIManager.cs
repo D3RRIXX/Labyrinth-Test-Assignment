@@ -33,7 +33,7 @@ namespace Labyrinth.UI
 
         private void Start()
         {
-            OnGameStateChanged(GameState.Menu);
+            // OnGameStateChanged(GameState.Menu);
         }
 
         private void OnDestroy()

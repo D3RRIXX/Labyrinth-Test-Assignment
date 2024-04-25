@@ -6927,6 +6927,11 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 517226085912389904, guid: 6f1af0ea337e8bd4ebf850e8f580f260,
+        type: 3}
+      propertyPath: m_IgnoreReversedGraphics
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 1455348238095310460, guid: 6f1af0ea337e8bd4ebf850e8f580f260,
         type: 3}
       propertyPath: m_Name

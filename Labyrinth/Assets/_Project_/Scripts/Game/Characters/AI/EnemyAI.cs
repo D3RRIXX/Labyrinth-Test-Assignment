@@ -1,5 +1,4 @@
 using System.Collections;
-using HnS.GameStateSystem;
 using Labyrinth.Game.Characters.Player;
 using UnityEngine;
 using UnityEngine.AI;
@@ -8,30 +7,19 @@ using Zenject;
 namespace Labyrinth.Game.Characters.AI
 {
 	[RequireComponent(typeof(NavMeshAgent))]
-	public class EnemyAI : MonoBehaviour, ICharacterMovement
+	public class EnemyAI : MonoBehaviour
 	{
 		[SerializeField] private Transform[] _patrolPoints;
 		[SerializeField] private float _changePointCooldown;
 
-		private EnemyAnimator _animator;
 		private NavMeshAgent _agent;
 		private Coroutine _moveToPointRoutine;
 
 		public int CurrentPatrolPoint { get; set; }
 
-		public Vector3 Velocity => _agent.velocity;
-		public float MaxSpeed => _agent.speed;
-
-		[Inject]
-		private void Construct(int savedPatrolPoint)
-		{
-			CurrentPatrolPoint = savedPatrolPoint;
-		}
-
 		private void Awake()
 		{
 			_agent = GetComponent<NavMeshAgent>();
-			_animator = GetComponentInChildren<EnemyAnimator>();
 		}
 
 		private void Start()
@@ -50,9 +38,8 @@ namespace Labyrinth.Game.Characters.AI
 			_agent.updateRotation = false;
 
 			transform.rotation = Quaternion.LookRotation(player.transform.position - transform.position);
-			_animator.PlayShootAnim();
 
-			GameStateManager.CurrentState = GameState.PlayerDetected;
+			//TODO: Add chase logic
 		}
 
 		private void StartMovingToPoint(int pointIndex)

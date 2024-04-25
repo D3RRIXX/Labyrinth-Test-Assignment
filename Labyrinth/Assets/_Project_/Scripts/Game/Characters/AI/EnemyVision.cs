@@ -2,8 +2,13 @@
 using Labyrinth.Game.Characters.Player;
 using UnityEngine;
 
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
+
 namespace Labyrinth.Game.Characters.AI
 {
+	[RequireComponent(typeof(EnemyAI))]
 	public class EnemyVision : MonoBehaviour
 	{
 		[SerializeField] private float _viewDistance;
@@ -16,11 +21,20 @@ namespace Labyrinth.Game.Characters.AI
 
 		private static readonly Collider[] OVERLAP_RESULTS = new Collider[50];
 
-		private void OnDrawGizmosSelected()
+#if UNITY_EDITOR
+		private void OnDrawGizmos()
 		{
-			Gizmos.color = Color.blue;
-			Gizmos.DrawWireSphere(transform.position, _viewDistance);
+			Handles.color = Color.red;
+			float halfFOV = _viewAngle / 2f;
+			
+			Vector3 startPoint = Quaternion.Euler(0, -halfFOV, 0) * transform.forward * _viewDistance + transform.position;
+			Vector3 endPoint = Quaternion.Euler(0, halfFOV, 0) * transform.forward * _viewDistance + transform.position;
+			
+			Handles.DrawWireArc(transform.position, Vector3.up, Quaternion.Euler(0, -halfFOV, 0) * transform.forward, _viewAngle, _viewDistance);
+			Handles.DrawLine(transform.position, startPoint);
+			Handles.DrawLine(transform.position, endPoint);
 		}
+#endif
 
 		private void Awake()
 		{
